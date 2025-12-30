@@ -92,3 +92,15 @@ Ejemplo de validación:
 - fechas de alta
 
 Estas consultas permitieron confirmar el correcto funcionamiento del esquema antes de avanzar con la implementación de la lógica de aplicación.
+
+
+## Estado actual del proyecto
+
+- Modelo de base de datos implementado en MySQL
+- Relaciones validadas mediante consultas de verificación
+- Estructura del proyecto definida siguiendo arquitectura en capas
+
+Próximos pasos:
+- Implementación de entidades del dominio en Java
+- Desarrollo de la capa DAO
+- Construcción de la interfaz gráfica con Swing
