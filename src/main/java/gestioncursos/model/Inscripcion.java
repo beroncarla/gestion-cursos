@@ -1,12 +1,28 @@
 package gestioncursos.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Inscripcion {
 
     private int id;
     private int usuarioId;
     private int cursoId;
-    private LocalDate fechaInscripcion;
-    private String estado;
+    private LocalDateTime fechaAlta;
+
+    public Inscripcion(int usuarioId, int cursoId) {
+        this.usuarioId = usuarioId;
+        this.cursoId = cursoId;
+        this.fechaAlta = LocalDateTime.now();
+    }
+
+    // Métodos de comportamiento
+    public void actualizarCurso(int nuevoCursoId) { this.cursoId = nuevoCursoId; }
+
+    // Getters y setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public int getUsuarioId() { return usuarioId; }
+    public int getCursoId() { return cursoId; }
+    public LocalDateTime getFechaAlta() { return fechaAlta; }
 }
+
