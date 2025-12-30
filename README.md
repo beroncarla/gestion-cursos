@@ -64,23 +64,6 @@ Implementación de bajas lógicas (activo, estado).
 
 Control de acceso mediante roles (ADMIN, USER)
 
-## Estructura del Proyecto de Gestión de Cursos
-gestion-cursos/
-├── database/
-│   └── schema.sql        # Definición del modelo de datos en MySQL
-├── src/
-│   └── main/
-│       └── java/
-│           └── com/
-│               └── tucarrera/
-│                   └── gestioncursos/
-│                       ├── ui/           # Interfaz gráfica (Swing)
-│                       ├── service/      # Lógica de negocio
-│                       ├── dao/          # Acceso a datos (JDBC / SQL)
-│                       ├── model/        # Entidades del dominio
-│                       └── util/         # Clases utilitarias
-├── README.md
-
 
 ## Verificación del modelo de datos
 
