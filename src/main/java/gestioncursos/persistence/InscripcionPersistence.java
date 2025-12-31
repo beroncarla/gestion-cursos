@@ -10,4 +10,5 @@ public interface InscripcionPersistence {
     void delete(int inscripcionId);
     Inscripcion findById(int inscripcionId);
     List<Inscripcion> findAll();
+    List<Inscripcion> findByUsuarioId(int usuarioId);
 }

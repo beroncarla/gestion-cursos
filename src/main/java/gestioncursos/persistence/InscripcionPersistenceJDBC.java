@@ -117,6 +117,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
         }
     }
 
+    @Override
     public List<Inscripcion> findByUsuarioId(int usuarioId) {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = "SELECT * FROM inscripcion WHERE usuario_id=?";
