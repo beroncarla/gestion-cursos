@@ -15,6 +15,12 @@ public class Inscripcion {
         this.fechaAlta = LocalDateTime.now();
     }
 
+    public Inscripcion(int id, int usuarioId, int cursoId, LocalDateTime fechaAlta) {
+        this.id = id;
+        this.usuarioId = usuarioId;
+        this.cursoId = cursoId;
+        this.fechaAlta = fechaAlta;
+    }
     // Métodos de comportamiento
     public void actualizarCurso(int nuevoCursoId) { this.cursoId = nuevoCursoId; }
 
