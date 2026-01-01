@@ -7,6 +7,7 @@ import gestioncursos.persistence.InscripcionPersistence;
 import gestioncursos.persistence.UsuarioPersistence;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InscripcionServiceTest {
@@ -53,7 +54,7 @@ public class InscripcionServiceTest {
         cursoPersistence.save(curso);
 
         assertThrows(IllegalArgumentException.class, () -> service.inscribirUsuario(999, curso.getId()));
-
+        assertEquals("Usuario no encontrado", assertThrows(IllegalArgumentException.class, () -> service.inscribirUsuario(999, curso.getId())).getMessage());
     }
 }
     /*
