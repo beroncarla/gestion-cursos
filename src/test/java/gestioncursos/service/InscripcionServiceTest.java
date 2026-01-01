@@ -36,8 +36,9 @@ public class InscripcionServiceTest {
         assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(), curso.getId()));
 
     }
+
     @Test
-    public void noPermiteInscribirUsuarioNoExistente(){
+    public void noPermiteInscribirUsuarioNoExistente() {
         InscripcionPersistence inscripcionPersistence = new FakeInscripcionPersistence();
 
         CursoPersistence cursoPersistence = new FakeCursoPersistence();
@@ -56,8 +57,7 @@ public class InscripcionServiceTest {
         assertThrows(IllegalArgumentException.class, () -> service.inscribirUsuario(999, curso.getId()));
         assertEquals("Usuario no encontrado", assertThrows(IllegalArgumentException.class, () -> service.inscribirUsuario(999, curso.getId())).getMessage());
     }
-}
-    /*
+
     @Test
     public void noPermiteInscribirUsuarioInactivo() {
         InscripcionPersistence inscripcionPersistence = new FakeInscripcionPersistence();
@@ -71,5 +71,12 @@ public class InscripcionServiceTest {
                 cursoPersistence,
                 inscripcionPersistence
         );
+        Usuario usuario = new Usuario("carla", "carlaberon@gmail.com", "password");
+        usuario.desactivar();
+        usuarioPersistence.save(usuario);
+        Curso curso = new Curso("Java Basico", "Descripcion de Java Basico");
+        cursoPersistence.save(curso);
+        assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(), curso.getId()));
+        assertEquals("El usuario está inactivo", assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(), curso.getId())).getMessage());
     }
-*/
+}
