@@ -3,6 +3,7 @@ import gestioncursos.model.Curso;
 import gestioncursos.persistence.CursoPersistence;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CursoServiceImpl implements CursoService {
 
@@ -23,7 +24,7 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public Curso obtenerPorId(int id) {
+    public Optional<Curso> obtenerPorId(int id) {
         return cursoPersistence.findById(id);
     }
 
@@ -34,12 +35,12 @@ public class CursoServiceImpl implements CursoService {
 
     @Override
     public void desactivarCurso(int id) {
-        Curso curso = cursoPersistence.findById(id);
-        if (curso == null) {
+        Optional<Curso> curso = cursoPersistence.findById(id);
+        if (curso.isEmpty()) {
             throw new IllegalArgumentException("Curso no encontrado");
         }
 
-        curso.desactivar();
-        cursoPersistence.update(curso);
+        curso.get().desactivar();
+        cursoPersistence.update(curso.orElse(null));
     }
 }

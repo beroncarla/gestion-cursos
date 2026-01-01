@@ -2,12 +2,13 @@ package gestioncursos.service;
 
 import gestioncursos.model.Curso;
 import java.util.List;
+import java.util.Optional;
 
 public interface CursoService {
 
     void crearCurso(String nombre, String descripcion);
 
-    Curso obtenerPorId(int id);
+    Optional<Curso> obtenerPorId(int id);
 
     List<Curso> listarTodos();
 

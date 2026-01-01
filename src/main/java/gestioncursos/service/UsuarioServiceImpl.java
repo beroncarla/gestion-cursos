@@ -4,6 +4,7 @@ import gestioncursos.model.Usuario;
 import gestioncursos.persistence.UsuarioPersistence;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -22,7 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario obtenerPorId(int id) {
+    public Optional<Usuario> obtenerPorId(int id) {
         return usuarioPersistence.findById(id);
     }
     @Override
@@ -31,11 +32,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
     @Override
     public void desactivarUsuario(int id) {
-        Usuario usuario = usuarioPersistence.findById(id);
-        if (usuario == null) {
+        Optional<Usuario> usuario = usuarioPersistence.findById(id);
+        if (usuario.isEmpty()) {
             throw new IllegalArgumentException("Usuario no encontrado");
         }
-        usuario.desactivar();
-        usuarioPersistence.update(usuario);
+        usuario.get().desactivar();
+        usuarioPersistence.update(usuario.orElse(null));
     }
 }

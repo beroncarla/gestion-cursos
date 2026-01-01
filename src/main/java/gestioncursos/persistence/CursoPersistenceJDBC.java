@@ -6,6 +6,7 @@ import gestioncursos.util.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CursoPersistenceJDBC implements CursoPersistence {
 
@@ -32,7 +33,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
     }
 
     @Override
-    public Curso findById(int id) {
+    public Optional<Curso> findById(int id) {
         String sql = "SELECT * FROM curso WHERE id_curso=?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -43,7 +44,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
                     Curso c = new Curso(rs.getString("nombre"), rs.getString("descripcion"));
                     c.setId(rs.getInt("id_curso"));
                     if (!rs.getBoolean("activo")) c.desactivar();
-                    return c;
+                    return Optional.of(c);
                 }
             }
 

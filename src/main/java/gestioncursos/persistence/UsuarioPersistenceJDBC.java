@@ -6,6 +6,7 @@ import gestioncursos.util.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UsuarioPersistenceJDBC implements UsuarioPersistence {
 
@@ -36,7 +37,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
     }
 
     @Override
-    public Usuario findById(int id) {
+    public Optional<Usuario> findById(int id) {
         String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -52,7 +53,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
                     u.setId(rs.getInt("id_usuario"));
                     u.cambiarRol(rs.getString("rol"));
                     if (!rs.getBoolean("activo")) u.desactivar();
-                    return u;
+                    return Optional.of(u);
                 }
             }
 

@@ -8,6 +8,7 @@ import gestioncursos.persistence.InscripcionPersistence;
 import gestioncursos.persistence.UsuarioPersistence;
 
 import java.util.List;
+import java.util.Optional;
 
 public class InscripcionServiceImpl implements InscripcionService {
 
@@ -28,21 +29,21 @@ public class InscripcionServiceImpl implements InscripcionService {
     @Override
     public void inscribirUsuario(int usuarioId, int cursoId) {
 
-        Usuario usuario = usuarioPersistence.findById(usuarioId);
-        if (usuario == null) {
+        Optional<Usuario> usuario = usuarioPersistence.findById(usuarioId);
+        if (usuario.isEmpty()) {
             throw new IllegalArgumentException("Usuario no encontrado");
         }
 
-        if (!usuario.isActivo()) {
+        if (!usuario.get().isActivo()) {
             throw new IllegalStateException("El usuario está inactivo");
         }
 
-        Curso curso = cursoPersistence.findById(cursoId);
-        if (curso == null) {
-            throw new IllegalArgumentException("Curso no encontrado");
+        Optional<Curso> curso = cursoPersistence.findById(cursoId);
+        if (curso.isEmpty()) {
+            throw new IllegalStateException("Curso no encontrado");
         }
 
-        if (!curso.isActivo()) {
+        if (!curso.get().isActivo()) {
             throw new IllegalStateException("El curso está inactivo");
         }
 
