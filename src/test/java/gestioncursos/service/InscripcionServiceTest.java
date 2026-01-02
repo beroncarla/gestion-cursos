@@ -130,6 +130,7 @@ public class InscripcionServiceTest {
         usuarioPersistence.save(usuario);
         cursoPersistence.save(curso);
         service.inscribirUsuario(usuario.getId(),curso.getId());
-        assertEquals(1, inscripcionPersistence.findByUsuarioId(usuario.getId()).size());
+        var lista = inscripcionPersistence.findByUsuarioId(usuario.getId());
+        assertEquals(1, lista.size());
     }
 }
