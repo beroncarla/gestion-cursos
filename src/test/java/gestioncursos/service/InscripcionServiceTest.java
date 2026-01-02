@@ -96,4 +96,21 @@ public class InscripcionServiceTest {
         assertEquals("Curso no encontrado", assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),999)).getMessage());
 
     }
+    @Test
+    public void noPermiteIscribirUnCursoInactivo(){
+        InscripcionPersistence inscripcionPersistence = new FakeInscripcionPersistence();
+        CursoPersistence cursoPersistence = new FakeCursoPersistence();
+        UsuarioPersistence usuarioPersistence = new FakeUsuarioPersistence();
+        InscripcionService service = new InscripcionServiceImpl(
+                usuarioPersistence,
+                cursoPersistence,
+                inscripcionPersistence
+        );
+        Usuario usuario = new Usuario("carla","carlab@gmail.com","password");
+        Curso curso = new Curso("Java Basico","Descripcion de Java Basico");
+        curso.desactivar();
+        usuarioPersistence.save(usuario);
+        cursoPersistence.save(curso);
+        assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),curso.getId()));
+    }
 }
