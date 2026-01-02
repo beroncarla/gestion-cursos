@@ -112,5 +112,6 @@ public class InscripcionServiceTest {
         usuarioPersistence.save(usuario);
         cursoPersistence.save(curso);
         assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),curso.getId()));
+        assertEquals("El curso está inactivo", assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),curso.getId())).getMessage());
     }
 }
