@@ -93,6 +93,7 @@ public class InscripcionServiceTest {
         Usuario usuario = new Usuario("carla","carlab@gmail.com","password");
         usuarioPersistence.save(usuario);
         assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),999));
+        assertEquals("Curso no encontrado", assertThrows(IllegalStateException.class, () -> service.inscribirUsuario(usuario.getId(),999)).getMessage());
 
     }
 }
