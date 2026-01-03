@@ -5,8 +5,7 @@ import gestioncursos.persistence.CursoPersistence;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CursoServiceTest {
 
@@ -23,5 +22,9 @@ public class CursoServiceTest {
       cursoService.crearCurso("Java Avanzado", "Curso avanzado de Java");
       assertNotNull(cursoPersistence.findAll());
       assertEquals(1, cursoPersistence.findAll().size());
+    }
+    @Test
+    void noPermitirCrearCursoConNombreVacio(){
+        assertThrows(IllegalArgumentException.class, () -> cursoService.crearCurso("", "Descripcion del curso"));
     }
 }
