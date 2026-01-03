@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InscripcionPersistenceJDBC implements InscripcionPersistence {
-
+    public final Connection conn;
+    public InscripcionPersistenceJDBC(Connection conn) {
+        this.conn = conn;
+    }
     @Override
     public void save(Inscripcion inscripcion) {
         String sql = "INSERT INTO inscripcion (usuario_id, curso_id, fecha_alta) VALUES (?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, inscripcion.getUsuarioId());
             stmt.setInt(2, inscripcion.getCursoId());
@@ -33,8 +35,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
     @Override
     public Inscripcion findById(int id) {
         String sql = "SELECT * FROM inscripcion WHERE id_inscripcion=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -61,8 +62,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = "SELECT * FROM inscripcion";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -86,8 +86,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
     @Override
     public void update(Inscripcion inscripcion) {
         String sql = "UPDATE inscripcion SET usuario_id=?, curso_id=?, fecha_alta=? WHERE id_inscripcion=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, inscripcion.getUsuarioId());
             stmt.setInt(2, inscripcion.getCursoId());
@@ -105,8 +104,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM inscripcion WHERE id_inscripcion=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
@@ -121,8 +119,7 @@ public class InscripcionPersistenceJDBC implements InscripcionPersistence {
     public List<Inscripcion> findByUsuarioId(int usuarioId) {
         List<Inscripcion> inscripciones = new ArrayList<>();
         String sql = "SELECT * FROM inscripcion WHERE usuario_id=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, usuarioId);
             try (ResultSet rs = stmt.executeQuery()) {
