@@ -6,7 +6,9 @@ import gestioncursos.model.Usuario;
 import gestioncursos.persistence.CursoPersistence;
 import gestioncursos.persistence.InscripcionPersistence;
 import gestioncursos.persistence.UsuarioPersistence;
+import gestioncursos.util.DatabaseConnection;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,34 +31,48 @@ public class InscripcionServiceImpl implements InscripcionService {
     @Override
     public void inscribirUsuario(int usuarioId, int cursoId) {
 
-        Optional<Usuario> usuario = usuarioPersistence.findById(usuarioId);
-        if (usuario.isEmpty()) {
-            throw new IllegalArgumentException("Usuario no encontrado");
+        Connection conn = null;
+        try{
+            conn = DatabaseConnection.getConnection();
+            Usuario usuario = usuarioPersistence.findById(usuarioId)
+                    .orElseThrow(() -> new IllegalArgumentException("Usuario inexistente"));
+            if (!usuario.isActivo()) {
+                throw new IllegalStateException("Usuario inactivo");
+            }
+            Curso curso = cursoPersistence.findById(cursoId)
+                    .orElseThrow(() -> new IllegalArgumentException("Curso inexistente"));
+            if (!curso.isActivo()) {
+                throw new IllegalStateException("Curso inactivo");
+            }
+            boolean yaInscripto = inscripcionPersistence
+                    .findByUsuarioId(usuarioId)
+                    .stream()
+                    .anyMatch(i -> i.getCursoId() == cursoId);
+            if (yaInscripto) {
+                throw new IllegalStateException("Usuario ya inscripto en el curso");
+            }
+
+            Inscripcion inscripcion = new Inscripcion(usuarioId, cursoId);
+            inscripcionPersistence.save(inscripcion);
+            conn.rollback();
+        }catch (Exception e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (Exception rollBackEx) {
+                throw new RuntimeException("Error al hacer rollback de la transacción", rollBackEx);
+            }
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception closeEx) {
+                throw new RuntimeException("Error al cerrar la conexión", closeEx);
+            }
         }
-
-        if (!usuario.get().isActivo()) {
-            throw new IllegalStateException("El usuario está inactivo");
-        }
-
-        Optional<Curso> curso = cursoPersistence.findById(cursoId);
-        if (curso.isEmpty()) {
-            throw new IllegalStateException("Curso no encontrado");
-        }
-
-        if (!curso.get().isActivo()) {
-            throw new IllegalStateException("El curso está inactivo");
-        }
-
-        List<Inscripcion> inscripciones = inscripcionPersistence.findByUsuarioId(usuarioId);
-        boolean yaInscripto = inscripciones.stream()
-                .anyMatch(i -> i.getCursoId() == cursoId);
-
-        if (yaInscripto) {
-            throw new IllegalStateException("El usuario ya está inscripto en este curso");
-        }
-
-        Inscripcion inscripcion = new Inscripcion(usuarioId, cursoId);
-        inscripcionPersistence.save(inscripcion);
     }
 
     @Override
