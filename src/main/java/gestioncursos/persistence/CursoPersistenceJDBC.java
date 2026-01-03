@@ -10,11 +10,15 @@ import java.util.Optional;
 
 public class CursoPersistenceJDBC implements CursoPersistence {
 
+    public final Connection conn;
+
+    public CursoPersistenceJDBC(Connection conn) {
+        this.conn = conn;
+    }
     @Override
     public void save(Curso curso) {
         String sql = "INSERT INTO curso (nombre, descripcion, activo) VALUES (?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, curso.getNombre());
             stmt.setString(2, curso.getDescripcion());
@@ -35,8 +39,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
     @Override
     public Optional<Curso> findById(int id) {
         String sql = "SELECT * FROM curso WHERE id_curso=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -59,8 +62,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
         List<Curso> cursos = new ArrayList<>();
         String sql = "SELECT * FROM curso";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -80,8 +82,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
     @Override
     public void update(Curso curso) {
         String sql = "UPDATE curso SET nombre=?, descripcion=?, activo=? WHERE id_curso=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, curso.getNombre());
             stmt.setString(2, curso.getDescripcion());
@@ -99,8 +100,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM curso WHERE id_curso=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
