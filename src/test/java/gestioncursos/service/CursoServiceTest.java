@@ -26,5 +26,6 @@ public class CursoServiceTest {
     @Test
     void noPermitirCrearCursoConNombreVacio(){
         assertThrows(IllegalArgumentException.class, () -> cursoService.crearCurso("", "Descripcion del curso"));
+        assertEquals("El nombre del curso no puede estar vacío", assertThrows(IllegalArgumentException.class, () -> cursoService.crearCurso("", "Descripcion del curso")).getMessage());
     }
 }
