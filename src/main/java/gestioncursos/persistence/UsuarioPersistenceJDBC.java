@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioPersistenceJDBC implements UsuarioPersistence {
-
+    public final Connection conn;
+    public UsuarioPersistenceJDBC(Connection conn) {
+        this.conn = conn;
+    }
     @Override
     public void save(Usuario usuario) {
         String sql = "INSERT INTO usuario (nombre, email, password_hash, rol, activo) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, usuario.getNombre());
             stmt.setString(2, usuario.getEmail());
@@ -39,8 +41,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
     @Override
     public Optional<Usuario> findById(int id) {
         String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -68,8 +69,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuario";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -94,8 +94,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
     @Override
     public void update(Usuario usuario) {
         String sql = "UPDATE usuario SET nombre=?, email=?, password_hash=?, rol=?, activo=? WHERE id_usuario=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, usuario.getNombre());
             stmt.setString(2, usuario.getEmail());
@@ -115,8 +114,7 @@ public class UsuarioPersistenceJDBC implements UsuarioPersistence {
     @Override
     public void delete(int id) {
         String sql = "DELETE FROM usuario WHERE id_usuario=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             stmt.executeUpdate();
