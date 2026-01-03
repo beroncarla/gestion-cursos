@@ -77,13 +77,31 @@ Ejemplo de validación:
 Estas consultas permitieron confirmar el correcto funcionamiento del esquema antes de avanzar con la implementación de la lógica de aplicación.
 
 
-## Estado actual del proyecto
+## Manejo de Transacciones
 
-- Modelo de base de datos implementado en MySQL
-- Relaciones validadas mediante consultas de verificación
-- Estructura del proyecto definida siguiendo arquitectura en capas
+El sistema implementa manejo manual de transacciones JDBC a nivel de la capa de servicios (Service Layer),
+garantizando la atomicidad de los casos de uso críticos.
 
-Próximos pasos:
-- Implementación de entidades del dominio en Java
-- Desarrollo de la capa DAO
-- Construcción de la interfaz gráfica con Swing
+### Enfoque adoptado
+
+- Las transacciones se controlan exclusivamente desde el Service Layer.
+- Las clases de persistencia (JDBC) **no abren ni cierran conexiones**, ni ejecutan commit/rollback.
+- Todas las operaciones que forman parte de un mismo caso de uso comparten la misma conexión.
+
+### Caso de uso transaccional
+
+El método `inscribirUsuario(usuarioId, cursoId)` es transaccional, ya que involucra múltiples operaciones:
+
+- Validación de usuario
+- Validación de curso
+- Verificación de inscripción previa
+- Inserción de la inscripción
+
+Si cualquiera de estas operaciones falla, la transacción se revierte completamente mediante `rollback`.
+
+### Beneficios del diseño
+
+- Consistencia de datos garantizada
+- Separación clara de responsabilidades
+- Código testeable (los tests utilizan Fakes sin dependencia de JDBC)
+- Preparado para escalar a frameworks como Spring Transactional
