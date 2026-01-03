@@ -14,7 +14,9 @@ public class DatabaseConnection {
         if (URL == null || USER == null || PASSWORD == null) {
             throw new SQLException("Database connection environment variables are not set.");
         }
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+        conn.setAutoCommit(false);
+        return conn;
     }
 
 }
