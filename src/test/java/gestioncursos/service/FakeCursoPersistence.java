@@ -3,18 +3,15 @@ package gestioncursos.service;
 import gestioncursos.model.Curso;
 import gestioncursos.persistence.CursoPersistence;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class FakeCursoPersistence implements CursoPersistence {
 
-    Map<Integer, Curso> cursos = new HashMap<>();
+    List<Curso> cursosList = new ArrayList<>();
     @Override
     public void save(Curso curso) {
 
-        cursos.put(curso.getId(), curso);
+        cursosList.add(curso);
     }
 
     @Override
@@ -30,11 +27,11 @@ public class FakeCursoPersistence implements CursoPersistence {
     @Override
     public Optional<Curso> findById(int cursoId) {
 
-        return Optional.ofNullable(cursos.get(cursoId));
+        return Optional.ofNullable(cursosList.get(cursoId));
     }
 
     @Override
     public List<Curso> findAll() {
-        return List.of();
+        return cursosList;
     }
 }
