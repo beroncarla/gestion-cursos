@@ -1,4 +1,4 @@
-package gestioncursos.ui;
+package gestioncursos.ui.panel;
 
 public class InscripcionPanel {
 }
