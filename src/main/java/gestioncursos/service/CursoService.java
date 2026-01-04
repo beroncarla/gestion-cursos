@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface CursoService {
 
-    void crearCurso(String nombre, String descripcion);
+    void crearCurso(String nombre, int cupo);
 
     Optional<Curso> obtenerPorId(int id);
 

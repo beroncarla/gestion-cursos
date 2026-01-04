@@ -14,12 +14,12 @@ public class CursoServiceImpl implements CursoService {
     }
 
     @Override
-    public void crearCurso(String nombre, String descripcion) {
+    public void crearCurso(String nombre, int cupo) {
         if (nombre == null || nombre.isBlank()) {
             throw new IllegalArgumentException("El nombre del curso no puede estar vacío");
         }
 
-        Curso curso = new Curso(nombre, descripcion);
+        Curso curso = new Curso(nombre, cupo);
         cursoPersistence.save(curso);
     }
 

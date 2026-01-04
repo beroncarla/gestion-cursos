@@ -17,11 +17,11 @@ public class CursoPersistenceJDBC implements CursoPersistence {
     }
     @Override
     public void save(Curso curso) {
-        String sql = "INSERT INTO curso (nombre, descripcion, activo) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO curso (nombre,cupo,activo) VALUES (?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, curso.getNombre());
-            stmt.setString(2, curso.getDescripcion());
+            stmt.setInt(2, curso.getCupo());
             stmt.setBoolean(3, curso.isActivo());
             stmt.executeUpdate();
 
@@ -44,7 +44,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Curso c = new Curso(rs.getString("nombre"), rs.getString("descripcion"));
+                    Curso c = new Curso(rs.getString("nombre"), rs.getInt("cupo"));
                     c.setId(rs.getInt("id_curso"));
                     if (!rs.getBoolean("activo")) c.desactivar();
                     return Optional.of(c);
@@ -66,7 +66,7 @@ public class CursoPersistenceJDBC implements CursoPersistence {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                Curso c = new Curso(rs.getString("nombre"), rs.getString("descripcion"));
+                Curso c = new Curso(rs.getString("nombre"), rs.getInt("cupo"));
                 c.setId(rs.getInt("id_curso"));
                 if (!rs.getBoolean("activo")) c.desactivar();
                 cursos.add(c);
@@ -81,11 +81,11 @@ public class CursoPersistenceJDBC implements CursoPersistence {
 
     @Override
     public void update(Curso curso) {
-        String sql = "UPDATE curso SET nombre=?, descripcion=?, activo=? WHERE id_curso=?";
+        String sql = "UPDATE curso SET nombre=?, cupo=?, activo=? WHERE id_curso=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, curso.getNombre());
-            stmt.setString(2, curso.getDescripcion());
+            stmt.setInt(2, curso.getCupo());
             stmt.setBoolean(3, curso.isActivo());
             stmt.setInt(4, curso.getId());
             stmt.executeUpdate();

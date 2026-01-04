@@ -79,4 +79,14 @@ public class InscripcionServiceImpl implements InscripcionService {
     public List<Inscripcion> listarPorUsuario(int usuarioId) {
         return inscripcionPersistence.findByUsuarioId(usuarioId);
     }
+
+    @Override
+    public List<Usuario> listarUsuarios() {
+        return usuarioPersistence.findAll();
+    }
+
+    @Override
+    public List<Curso> listarCursos() {
+        return cursoPersistence.findAll();
+    }
 }

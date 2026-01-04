@@ -1,15 +1,39 @@
 package gestioncursos.ui;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import gestioncursos.model.Inscripcion;
+import gestioncursos.persistence.CursoPersistenceJDBC;
+import gestioncursos.persistence.InscripcionPersistenceJDBC;
+import gestioncursos.persistence.UsuarioPersistenceJDBC;
+import gestioncursos.service.*;
 import gestioncursos.ui.panel.InscripcionPanel;
+import gestioncursos.util.DatabaseConnection;
 
 public class MainFrame extends JFrame {
 
     private JPanel panelCentral;
+    private Connection conn;
+    private UsuarioService usuarioService;
+    private CursoService cursoService;
+    private InscripcionService inscripcionService;
 
-    public MainFrame() {
+
+    public MainFrame() throws SQLException {
         configurarVentana();
         inicializarComponentes();
+        this.conn = DatabaseConnection.getConnection();
+        UsuarioPersistenceJDBC usuarioPersistence = new UsuarioPersistenceJDBC(conn);
+        CursoPersistenceJDBC cursoPersistence = new CursoPersistenceJDBC(conn);
+        InscripcionPersistenceJDBC inscripcionPersistence = new InscripcionPersistenceJDBC(conn);
+        this.usuarioService = new UsuarioServiceImpl(usuarioPersistence);
+        this.cursoService = new CursoServiceImpl(cursoPersistence);
+        this.inscripcionService = new InscripcionServiceImpl(usuarioPersistence, cursoPersistence, inscripcionPersistence);
+
+
+
     }
 
     private void configurarVentana() {
@@ -34,7 +58,7 @@ public class MainFrame extends JFrame {
             var menuCursos = new JMenu("Cursos");
             var menuInscripciones = new JMenu("Inscripciones");
             var itemInscripciones = new JMenuItem("Gestionar Inscripciones");
-            itemInscripciones.addActionListener(e->mostrarPanel(new InscripcionPanel()));
+            itemInscripciones.addActionListener(e->mostrarPanel(new InscripcionPanel(inscripcionService)));
             menuInscripciones.add(itemInscripciones);
             menuBar.add(menuUsuarios);
             menuBar.add(menuCursos);
